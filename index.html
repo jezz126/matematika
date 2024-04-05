@@ -61,12 +61,22 @@ body {
   border-radius: 50%;
   margin: 5px;
   font-size: 32px;
-  background-color: #007bff;
-  color: white;
+  /* background-color: #007bff;
+  color: white; */
   border: 2px solid #007bff;
   color: #333;
   background-color: transparent;
   cursor: text;
+}
+
+.odgovor-tocan {
+    background-color: #32CD32;
+    color: white;
+}
+
+.odgovor-netocan {
+    background-color: #FFA07A;
+    color: white;
 }
 
 .tipkovnica {
@@ -183,6 +193,8 @@ function generateQuestion() {
   document.getElementById('br2').innerText = br2;
   document.getElementById('korisnickiOdgovor').innerText = '';
   svgElement.setAttribute('class', ''); // Započni sa neutralnim usnama
+  document.getElementById('korisnickiOdgovor').classList.remove('odgovor-tocan');
+  document.getElementById('korisnickiOdgovor').classList.remove('odgovor-netocan');
   tocanOdgovor = br1 * br2;
   updateScore();
   resetFeedback();
@@ -206,12 +218,14 @@ function provjeriOdgovor() {
     document.getElementById('povratna-informacija').innerText = 'Točno!';
     document.getElementById('povratna-informacija').classList.remove('netocno');
     document.getElementById('povratna-informacija').classList.add('tocno');
+    document.getElementById('korisnickiOdgovor').classList.add('odgovor-tocan');
     svgElement.setAttribute('class', 'sretan');
     correctCount++;
   } else {
     document.getElementById('povratna-informacija').innerText = 'Netočno.';
     document.getElementById('povratna-informacija').classList.add('netocno');
     document.getElementById('povratna-informacija').classList.remove('tocno');
+    document.getElementById('korisnickiOdgovor').classList.add('odgovor-netocan');
     document.getElementById('tocan-odgovor').innerHTML = `Točan odgovor je: <span style="font-size: 32px; color: #32CD32; font-weight: bold;">${tocanOdgovor}</span>`;
     svgElement.setAttribute('class', 'tuzan');
   }

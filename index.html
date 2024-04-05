@@ -178,6 +178,10 @@ svg.sretan path,
     <div id="povratna-informacija"></div>
     <div id="tocan-odgovor"></div>
   </div>
+  <div style="text-align: center; margin-top: 20px; font-size: 12px;">
+    Imaš prijedlog, pohvalu, prigovor?<br>Piši na <a href="mailto:ivan.jezerinac@gmail.com?subject=Matematika - Prijedlog/Pohvala/Prigovor">ivan.jezerinac@gmail.com</a>
+  </div>
+  
 </div>
 
 <script>
@@ -196,7 +200,7 @@ function generateQuestion() {
   document.getElementById('korisnickiOdgovor').classList.remove('odgovor-tocan');
   document.getElementById('korisnickiOdgovor').classList.remove('odgovor-netocan');
   tocanOdgovor = br1 * br2;
-  updateScore();
+  azurirajRezultat();
   resetFeedback();
 }
 
@@ -230,7 +234,7 @@ function provjeriOdgovor() {
     svgElement.setAttribute('class', 'tuzan');
   }
   attempts++;
-  updateScore();
+  azurirajRezultat();
   setTimeout(generateQuestion, 2000);
 }
 
@@ -240,7 +244,7 @@ function resetFeedback() {
   document.getElementById('povratna-informacija').className = '';
 }
 
-function updateScore() {
+function azurirajRezultat() {
   document.getElementById('rezultat').innerText = `${correctCount}/${attempts}`;
   let ocjena = ""; // Nova varijabla za ocjenu
   if (attempts > 0) { // Provjeravamo je li bilo pokušaja da bismo izbjegli dijeljenje s nulom

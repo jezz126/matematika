@@ -242,6 +242,22 @@ function resetFeedback() {
 
 function updateScore() {
   document.getElementById('rezultat').innerText = `${correctCount}/${attempts}`;
+  let ocjena = ""; // Nova varijabla za ocjenu
+  if (attempts > 0) { // Provjeravamo je li bilo pokušaja da bismo izbjegli dijeljenje s nulom
+    const postotak = (correctCount / attempts) * 100;
+    if (postotak >= 90) {
+      ocjena = "Odličan (5)";
+    } else if (postotak >= 75) {
+      ocjena = "Vrlo dobar (4)";
+    } else if (postotak >= 60) {
+      ocjena = "Dobar (3)";
+    } else if (postotak >= 50) {
+      ocjena = "Dovoljan (2)";
+    } else {
+      ocjena = "Neodovoljan (1)";
+    }
+    document.getElementById('rezultat').innerText += ` - ${ocjena}`;
+  }
 }
 
 window.onload = generateQuestion;

@@ -1,270 +1,293 @@
 <!DOCTYPE html>
 <html lang="hr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tablica Množenja</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #f0f0f0;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tablica Množenja</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <!-- Custom stilovi -->
+  <style>
+    .broj, .odgovor {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-/* Osiguravamo da je cijeli sadržaj centriran */
-.kontejner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin: auto;
-}
+    .broj {
+      background-color: #007bff;
+      color: white;
+    }
 
-.kontejner, .tipkovnica {
-    max-width: 250px; /* Smanjujemo maksimalnu širinu kontejnera za bolji izgled */
-}
+    .odgovor {
+      background-color: transparent;
+      border: 2px solid #007bff;
+      color: #333;
+      font-weight: bold;
+      cursor: text;
+      user-select: none; /* Sprečavanje označavanja teksta */
+    }
 
-.pitanje {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  margin: 20px 0;
-}
+    .odgovor-tocno {
+      background-color: #32CD32;
+      color: white;
+    }
 
-.broj, .odgovor {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin: 5px;
-  font-size: 32px;
-  background-color: #007bff;
-  color: white;
-}
+    .odgovor-netocno {
+      background-color: #FFA07A;
+      color: white;
+    }
 
-.odgovor {
-  width: 100px; /* Fiksna širina za polje odgovora */
-  height: 100px; /* Fiksna visina za polje odgovora */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  margin: 5px;
-  font-size: 32px;
-  /* background-color: #007bff;
-  color: white; */
-  border: 2px solid #007bff;
-  color: #333;
-  background-color: transparent;
-  cursor: text;
-}
+    .tipkovnica-tipka {
+        width: 90px;
+        height: 60px;
+        font-size: 23px; /* Veći font za lakše čitanje */
+        line-height: 60px; /* Ovo bi trebalo biti isto kao i visina tipke ako nema gornjeg i donjeg paddinga */
+        padding: 0; /* Ukloni padding ako postoji kako bi line-height precizno centrirao tekst */
+        display: flex; /* Omogućuje korištenje Flexbox-a za centriranje */
+        justify-content: center; /* Centriranje po horizontali */
+        align-items: center; /* Centriranje po vertikali */
+    }
 
-.odgovor-tocan {
-    background-color: #32CD32;
-    color: white;
-}
+    .povratniInfo-kontejner {
+        margin-top: 20px;
+        text-align: center;
+        font-size: small;
+    }
 
-.odgovor-netocan {
-    background-color: #FFA07A;
-    color: white;
-}
+    .povratniInfo-kontejner a {
+        color: #007bff; /* Plava boja teksta linka */
+    }
 
-.tipkovnica {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  justify-content: center; /* Centriramo tipkovnicu */
-  width: 100%;
-}
+    /* svg usne-osmijeh-mrgud */
+    svg {
+        width: 220px;
+        height: 132px;
+        margin-top: 0px;
+    }
 
-.tipka {
-  padding: 10px;
-  background-color: #cccccc;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
+    svg.sretan path,
+    svg.tuzan path {
+        fill: transparent;
+        stroke-width: 3px;
+        color: #007bff;
+    }
 
-#povratna-informacija, #rezultat {
-  font-weight: bold;
-  margin-top: 10px;
-  height: 20px; /* Fiksna visina za povratna-informacija i rezultat */
-}
+    svg.tuzan path {
+        transform: scaleY(-1);
+        transform-origin: 50% 40%;
+    }
 
-#povratna-informacija {
-  color: #32CD32; /* Svjetlija zelena za "točno" */
-}
-
-#povratna-informacija.netocno {
-  color: #FFA07A; /* Narančasta za "netočno" */
-}
-
-#tocan-odgovor {
-  color: #ADD8E6; /* Plavičasta za prikaz točnog odgovora */
-  height: 40px; /* Fiksna visina */
-}
-
-/* Stil za područje s odgovorima da ima kontrastnu pozadinu */
-.povratna-informacija-kontejner {
-  width: 100%;
-  background-color: #ffffff; /* Bijela pozadina za kontrast */
-  margin-top: 20px;
-  padding: 10px 0;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* osmijeh */
-svg {
-  width: 200px;
-  height: 120px;
-  margin-top: 0px;
-}
-
-svg.sretan path,
-        svg.tuzan path {
-            fill: transparent;
-            stroke-width: 3px;
-        }
-        svg.tuzan path {
-            transform: scaleY(-1);
-            transform-origin: 50% 40%;
-        }
-</style>
+    /* Smanjivanje razmaka između SVG-a i brojača */
+    .rezultat-prikaz {
+        font-weight: bold;
+        margin-top: -30px;
+    }
+  </style>
 </head>
 <body>
-<div class="kontejner">
-  <div id="pitanje" class="pitanje">
-    <div class="broj" id="br1"></div>
-    <div>x</div>
-    <div class="broj" id="br2"></div>
-  </div>
-  <div contenteditable="true" class="odgovor" id="korisnickiOdgovor"></div>
-  <div class="lice">
-    <svg viewBox="0 0 50 30" id="usne">
-        <path 
-        stroke-linecap="round" 
-        d="M5 5 c0 20, 40 20, 40 0" 
-        fill="#007bff" stroke="currentColor"
-    />
-    </svg>
-  </div>
-  <div class="tipkovnica">
-    <script>
-      for (let i = 1; i <= 9; i++) {
-        document.write(`<button class="tipka" onclick="unesiZnamenku('${i}')">${i}</button>`);
-      }
-    </script>
-    <button class="tipka" onclick="ocistiOdgovor()">C</button>
-    <button class="tipka" onclick="unesiZnamenku('0')">0</button>
-    <button class="tipka" onclick="provjeriOdgovor()">Unesi</button>
-  </div>
-  <div class="povratna-informacija-kontejner">
-    <div id="rezultat">0/0</div>
-    <div id="povratna-informacija"></div>
-    <div id="tocan-odgovor"></div>
-  </div>
-  <div style="text-align: center; margin-top: 20px; font-size: 12px;">
-    Imaš prijedlog, pohvalu, prigovor?<br>Piši na <a href="mailto:ivan.jezerinac@gmail.com?subject=Matematika - Prijedlog/Pohvala/Prigovor">ivan.jezerinac@gmail.com</a>
+  <div class="container my-5">
+    <!-- Množenik i množitelj -->
+    <div class="row justify-content-center mb-4">
+      <div class="col-auto">
+        <div class="broj" id="mnozenik"></div>
+      </div>
+      <div class="col-auto pt-3">
+        <span class="h1">x</span>
+      </div>
+      <div class="col-auto">
+        <div class="broj" id="mnozitelj"></div>
+      </div>
+    </div>
+
+    <!-- Odgovor -->
+    <div class="row justify-content-center mb-4">
+    <div class="col-auto">
+      <div class="odgovor" id="odgovorKorisnika"></div>
+    </div>
   </div>
   
-</div>
 
-<script>
-let tocanOdgovor = 0;
-let attempts = 0;
-let correctCount = 0;
+    <!-- SVG za nasmijesena / mrgud usta -->
+    <div class="row justify-content-center mb-4">
+      <div class="col-auto">
+        <svg id="usta" viewBox="0 0 50 30" xmlns="http://www.w3.org/2000/svg">
+            <path 
+                stroke-linecap="round" 
+                d="M5 5 c0 20, 40 20, 40 0" 
+                fill="#007bff" stroke="currentColor"
+            />
+            <!-- Tekst za ispis točno/netočno -->
+            <text id="svgBravoTekst" x="25" y="10" text-anchor="middle" fill="#32CD32" font-size="8" font-weight="bold">Bravo!</text>
+            <text id="svgNetocnoTekst" x="25" y="15" text-anchor="middle" fill="#FFA07A" font-size="6" font-weight="bold">Točno je:</text>
+            <!-- Tekst za točan odgovor u slučaju netočnog -->
+            <text id="svgIspravanOdgovorTekst" x="25" y="25" text-anchor="middle" fill="#32CD32" font-size="10" font-weight="bold">100</text>
+        </svg>
+      </div>
+    </div>
 
-function generateQuestion() {
-  const br1 = Math.floor(Math.random() * 10) + 1;
-  const br2 = Math.floor(Math.random() * 10) + 1;
-  const svgElement = document.getElementById('usne');
-  document.getElementById('br1').innerText = br1;
-  document.getElementById('br2').innerText = br2;
-  document.getElementById('korisnickiOdgovor').innerText = '';
-  svgElement.setAttribute('class', ''); // Započni sa neutralnim usnama
-  document.getElementById('korisnickiOdgovor').classList.remove('odgovor-tocan');
-  document.getElementById('korisnickiOdgovor').classList.remove('odgovor-netocan');
-  tocanOdgovor = br1 * br2;
-  azurirajRezultat();
-  resetFeedback();
-}
+    <!-- Prikaz rezultata i pokusaja -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-auto">
+            <div id="rezultat" class="rezultat-prikaz">0/0</div>
+        </div>
+    </div>
 
-function unesiZnamenku(digit) {
-  const currentAnswer = document.getElementById('korisnickiOdgovor').innerText;
-  if (currentAnswer.length < 3) {
-    document.getElementById('korisnickiOdgovor').innerText += digit;
-  }
-}
+    <!-- Tipkovnica -->
+    <div class="row justify-content-center">
+        <div id="tipkovnica" class="col-12 col-md-6 col-lg-4"></div>
+    </div>
 
-function ocistiOdgovor() {
-  document.getElementById('korisnickiOdgovor').innerText = '';
-}
+    <!-- Povratni info -->
+    <div class="row justify-content-center povratniInfo-kontejner">
+      <div class="col-12">
+        <div id="feedback">
+            Imaš prijedlog, pohvalu, prigovor?<br>Piši na <a href="mailto:ivan.jezerinac@gmail.com?subject=Matematika - Prijedlog/Pohvala/Prigovor">ivan.jezerinac@gmail.com</a><br>v1.1.0
+        </div>
+      </div>
+    </div>
+  </div>
 
-function provjeriOdgovor() {
-  const korisnickiOdgovor = parseInt(document.getElementById('korisnickiOdgovor').innerText, 10);
-  const svgElement = document.getElementById('usne');
-  if (korisnickiOdgovor === tocanOdgovor) {
-    document.getElementById('povratna-informacija').innerText = 'Točno!';
-    document.getElementById('povratna-informacija').classList.remove('netocno');
-    document.getElementById('povratna-informacija').classList.add('tocno');
-    document.getElementById('korisnickiOdgovor').classList.add('odgovor-tocan');
-    svgElement.setAttribute('class', 'sretan');
-    correctCount++;
-  } else {
-    document.getElementById('povratna-informacija').innerText = 'Netočno.';
-    document.getElementById('povratna-informacija').classList.add('netocno');
-    document.getElementById('povratna-informacija').classList.remove('tocno');
-    document.getElementById('korisnickiOdgovor').classList.add('odgovor-netocan');
-    document.getElementById('tocan-odgovor').innerHTML = `Točan odgovor je: <span style="font-size: 32px; color: #32CD32; font-weight: bold;">${tocanOdgovor}</span>`;
-    svgElement.setAttribute('class', 'tuzan');
-  }
-  attempts++;
-  azurirajRezultat();
-  setTimeout(generateQuestion, 2000);
-}
+  <script>
+    let pokusaji = 0;
+    let brojTocnih = 0;
 
-function resetFeedback() {
-  document.getElementById('povratna-informacija').innerText = '';
-  document.getElementById('tocan-odgovor').innerText = '';
-  document.getElementById('povratna-informacija').className = '';
-}
+    document.addEventListener('DOMContentLoaded', function() {
+        generirajPitanja();
+        generirajTipkovnicu();
+    });
 
-function azurirajRezultat() {
-  document.getElementById('rezultat').innerText = `${correctCount}/${attempts}`;
-  let ocjena = ""; // Nova varijabla za ocjenu
-  if (attempts > 0) { // Provjeravamo je li bilo pokušaja da bismo izbjegli dijeljenje s nulom
-    const postotak = (correctCount / attempts) * 100;
-    if (postotak >= 90) {
-      ocjena = "Odličan (5)";
-    } else if (postotak >= 75) {
-      ocjena = "Vrlo dobar (4)";
-    } else if (postotak >= 60) {
-      ocjena = "Dobar (3)";
-    } else if (postotak >= 50) {
-      ocjena = "Dovoljan (2)";
-    } else {
-      ocjena = "Neodovoljan (1)";
+    function generirajPitanja() {
+        const br1 = Math.floor(Math.random() * 10) + 1;
+        const br2 = Math.floor(Math.random() * 10) + 1;
+        const svgElement = document.getElementById('usta');
+        const korisnickiOdgovorElement = document.getElementById('odgovorKorisnika');
+        document.getElementById('mnozenik').textContent = br1;
+        document.getElementById('mnozitelj').textContent = br2;
+
+        // Resetiraj polje odgovora i usne
+        korisnickiOdgovorElement.textContent = '';
+        korisnickiOdgovorElement.classList.remove('odgovor-tocno', 'odgovor-netocno'); // Resetiranje stila nosa
+        svgElement.setAttribute('class', ''); // Započni sa neutralnim usnama
+
+        // Pohrani točan odgovor za kasniju provjeru
+        window.tocanOdgovor = br1 * br2; // Ovu globalnu varijablu ćemo koristiti u metodi provjeriOdgovor
+        
+        sakrijSvgTekst(); // Sakrij tekstualne poruke unutar SVG-a
     }
-    document.getElementById('rezultat').innerText += ` - ${ocjena}`;
-  }
-}
 
-window.onload = generateQuestion;
-</script>
+    function sakrijSvgTekst() {
+        document.getElementById('svgBravoTekst').style.display = 'none';
+        document.getElementById('svgNetocnoTekst').style.display = 'none';
+        document.getElementById('svgIspravanOdgovorTekst').style.display = 'none';
+    }
+
+    function generirajTipkovnicu() {
+        const tipkovnicaDiv = document.getElementById('tipkovnica');
+
+        // Helper metoda za kreiranje tipke
+        function kreirajTipku(oznaka) {
+            const tipka = document.createElement('tipka');
+            tipka.textContent = oznaka;
+            tipka.className = 'btn btn-secondary m-2 tipkovnica-tipka'; // Bootstrap button klase s marginama + custom klasa
+         
+            tipka.addEventListener('click', function() { umetniZnamenku(oznaka); });
+
+            return tipka;
+        }
+
+        // Brojevi 1-9
+        let red;
+        for (let i = 1; i <= 9; i++) {
+            if (i === 1 || i % 3 === 1) { // Započni novi red svake tri tipke
+                red = document.createElement('div');
+                red.className = 'd-flex justify-content-center'; // Centriraj red s tipkama
+                tipkovnicaDiv.appendChild(red);
+            }
+            red.appendChild(kreirajTipku(String(i)));
+        }
+
+        // Dodatne tipke ('C', '0', 'Unesi')
+        const dodatneTipke = ['C', '0', 'Unesi']; // Prilagodi oznake po potrebi
+        dodatneTipke.forEach((oznaka, index) => {
+            if (index % 3 === 0) { // Ako je potrebno, započni novi red
+            red = document.createElement('div');
+            red.className = 'd-flex justify-content-center';
+            tipkovnicaDiv.appendChild(red);
+            }
+            red.appendChild(kreirajTipku(oznaka));
+        });
+    }
+
+    function umetniZnamenku(znamenka) {
+        const odgovorKorisnika = document.getElementById('odgovorKorisnika'); // Dohvati element za prikaz odgovora
+        
+        if (znamenka === 'C') {
+            odgovorKorisnika.textContent = ''; // Očisti prikaz odgovora
+        } else if (znamenka === 'Unesi') {
+            provjeriOdgovor(); // Odhandleaj potvrdu odgovora
+        } else {
+            // Dodaj znamenku u prikaz odgovora samo ako ima ukupno manje od 3 znamenke
+            if (odgovorKorisnika.textContent.length < 3) {
+            odgovorKorisnika.textContent += znamenka;
+            }
+        }
+    }
+
+    function provjeriOdgovor() {
+        const korisnickiOdgovorElement = document.getElementById('odgovorKorisnika');
+        const odgovorKorisnika = parseInt(korisnickiOdgovorElement.textContent, 10);
+        const svgElement = document.getElementById('usta'); // Selektiraj SVG element od smajlija
+
+        pokusaji++;
+
+        if (odgovorKorisnika === window.tocanOdgovor) {
+            // Točan odgovor
+            svgBravoTekst.style.display = ''; // Prikazuje "Bravo!"
+            svgElement.setAttribute('class', 'sretan');
+            korisnickiOdgovorElement.classList.remove('odgovor-netocno');
+            korisnickiOdgovorElement.classList.add('odgovor-tocno');
+            brojTocnih++;
+        } else {
+            // Netočan odgovor
+            svgIspravanOdgovorTekst.textContent = `${tocanOdgovor}`;
+            svgNetocnoTekst.style.display = ''; // Prikazuje "Točno je:"
+            svgIspravanOdgovorTekst.style.display = ''; // Prikazuje točan odgovor
+            svgElement.setAttribute('class', 'tuzan');
+            korisnickiOdgovorElement.classList.remove('odgovor-tocno');
+            korisnickiOdgovorElement.classList.add('odgovor-netocno');
+        }
+
+        azurirajRezultat(); // Ažurira rezultat i brojač
+
+        // Resetiranje za novi upit nakon kratke pauze
+        setTimeout(generirajPitanja, 2000);
+    }
+
+    function azurirajRezultat() {
+        document.getElementById('rezultat').innerText = `${brojTocnih}/${pokusaji}`;
+        let ocjena = ""; // Nova varijabla za ocjenu
+        if (pokusaji > 0) { // Provjeravamo je li bilo pokušaja da bismo izbjegli dijeljenje s nulom
+            const postotak = (brojTocnih / pokusaji) * 100;
+            if (postotak >= 90) {
+            ocjena = "Odličan (5)";
+            } else if (postotak >= 75) {
+            ocjena = "Vrlo dobar (4)";
+            } else if (postotak >= 60) {
+            ocjena = "Dobar (3)";
+            } else if (postotak >= 50) {
+            ocjena = "Dovoljan (2)";
+            } else {
+            ocjena = "Neodovoljan (1)";
+            }
+            document.getElementById('rezultat').innerText += ` - ${ocjena}`;
+        }
+    }
+
+  </script>
 </body>
 </html>
